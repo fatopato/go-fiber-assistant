@@ -17,6 +17,7 @@ func setupRoutes(app *fiber.App) {
 	v1.Post("/todo", todo.SaveTODO)
 	v1.Get("/todo/:id", todo.GetTODOById)
 	v1.Delete("/todo/:id", todo.DeleteTODOById)
+	v1.Get("/todo/:id/over-time", todo.CheckOverTimeById)
 }
 
 func initDB() {

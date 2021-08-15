@@ -59,3 +59,20 @@ func DeleteTODOById(c *fiber.Ctx) {
 	db.Delete(&todo)
 	c.Send("TODO Successfully deleted")
 }
+
+func CheckOverTimeById(c *fiber.Ctx) {
+	id := c.Params("id")
+
+	db := database.DB
+	var todo Todo
+	db.Find(&todo, id)
+	if todo.Title == "" {
+		c.Status(500).Send("No TODO Found with ID")
+		return
+	}
+	c.JSON(todo.isOverTime())
+}
+
+func (todo *Todo) isOverTime() bool {
+	return time.Now().After(todo.DueTime) && !todo.Completed
+}
