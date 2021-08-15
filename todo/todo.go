@@ -74,5 +74,5 @@ func CheckOverTimeById(c *fiber.Ctx) {
 }
 
 func (todo *Todo) isOverTime() bool {
-	return time.Now().After(todo.DueTime) && !todo.Completed
+	return time.Now().After(todo.DueTime) && !todo.Completed && !todo.DueTime.IsZero()
 }
