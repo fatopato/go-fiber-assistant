@@ -5,7 +5,8 @@ import (
 
 	"github.com/fatopato/go-fiber-assistant/database"
 	"github.com/fatopato/go-fiber-assistant/todo"
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -13,11 +14,16 @@ import (
 func setupRoutes(app *fiber.App) {
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
+	v1.Use(cors.New())
 	v1.Get("/todo", todo.GetAllTODOs)
 	v1.Post("/todo", todo.SaveTODO)
+	v1.Put("/todo", todo.UpdateTODO)
 	v1.Get("/todo/:id", todo.GetTODOById)
 	v1.Delete("/todo/:id", todo.DeleteTODOById)
 	v1.Get("/todo/:id/over-time", todo.CheckOverTimeById)
+	v1.Put("/todo/complete/:id", todo.CompleteTODOById)
+	v1.Put("/todo/undo/:id", todo.UndoTODOById)
+	fmt.Println("Routes Done")
 }
 
 func initDB() {
@@ -37,5 +43,5 @@ func main() {
 	defer database.DB.Close()
 
 	setupRoutes(app)
-	app.Listen(3000)
+	app.Listen(":8080")
 }
